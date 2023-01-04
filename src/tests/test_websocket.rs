@@ -5,6 +5,7 @@ fn print_message(msg: String) {
 }
 //cargo test -- --nocapture
 #[tokio::test]
+#[ignore]
 async fn test_websocket() {
     let mut client = IBClientPortal::new(3000, false, "");
     client = client.get_session_id().await.unwrap();
