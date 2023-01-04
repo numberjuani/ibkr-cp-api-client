@@ -1,7 +1,9 @@
 [package]
-name = "ibkr-cpapi-client"
+name = "ibkr-cp-api-client"
 version = "0.1.0"
 edition = "2021"
+authors = ["Juan I Marquez"]
+email = "juanim@pm.me"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,6 +13,6 @@ reqwest = { version = "0.11.13", features = ["json"] }
 serde_json = "1.0.91"
 serde = { version = "1.0.152", features = ["derive"] }
 tokio-tungstenite = "0.18.0"
-futures-util = "0.3.17"
+futures-util = "0.3.25"
 chrono = { version = "0.4.23", features = ["serde"] }
 serde_repr = "0.1.10"
