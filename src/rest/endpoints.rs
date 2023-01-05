@@ -3,7 +3,7 @@ use rust_decimal::Decimal;
 use serde_json::{Value, json};
 
 use crate::client::IBClientPortal;
-use crate::models::contract::{SecurityDefinitions, Contract};
+use crate::models::contract::{SecurityDefinitions};
 use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
 use crate::models::positions::Position;
