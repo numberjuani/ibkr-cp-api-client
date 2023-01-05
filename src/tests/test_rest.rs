@@ -30,7 +30,7 @@ async fn test_sec_def_by_con_id() {
 }
 
 #[tokio::test]
-//#[ignore]
+#[ignore]
 async fn test_futures_by_symbol() {
     let ib_cp_api_client = IBClientPortal::new(3000, false, "");
     let contracts = ib_cp_api_client.get_futures_by_symbol(vec!["ES","NQ"]).await;
