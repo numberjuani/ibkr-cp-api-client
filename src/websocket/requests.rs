@@ -19,7 +19,7 @@ pub struct Subscription {
 }
 impl Subscription {
     pub fn new_smart_quote_data(contract:Contract) -> Self {
-        let tick_types = vec![TickType::BidPrice, TickType::AskPrice,TickType::AskSize,TickType::BidSize,TickType::LastPrice];
+        let tick_types = vec![TickType::BidPrice, TickType::AskPrice,TickType::AskSize,TickType::BidSize,TickType::LastPrice,TickType::MarketDataAvailability];
         Self { sub_type: SubscriptionType::QuoteData((tick_types, contract)), exchange: None }
     }
     pub fn build(&self) -> String {
@@ -196,7 +196,6 @@ pub enum TickType {
     ///Opt. Volume Change % - Today's option volume as a percentage of the average option volume.
     OptVolumeChange = 7607,
     ///Implied Vol. % - The implied volatility for the specific strike of the option in percentage. To query the Option Implied Vol. % from the underlying refer to field 7283. 
-
     ImpliedVol = 7633,
     ///Mark - The mark price is, the ask price if ask is less than last price, the bid price if bid is more than the last price, otherwise it's equal to last price.
     Mark = 7635,

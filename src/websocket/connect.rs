@@ -39,7 +39,7 @@ impl IBClientPortal {
         let (mut ws_out, mut ws_in) = ws_stream.split();
         let auth = self.ws_auth_msg();
         ws_out.send(Text(auth.to_owned())).await?;
-        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+        tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
         for sub in subscriptions {
             ws_out.send(Text(sub.build())).await?;
         }

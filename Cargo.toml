@@ -16,3 +16,4 @@ tokio-tungstenite = "0.18.0"
 futures-util = "0.3.25"
 chrono = { version = "0.4.23", features = ["serde"] }
 serde_repr = "0.1.10"
+rust_decimal = { version = "1.27.0", features = ["serde-float"] }

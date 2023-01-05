@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
+use rust_decimal::Decimal;
 use super::definitions::{AssetClass, OptionRight};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -22,7 +22,7 @@ pub struct Contract {
     pub display_rule: DisplayRule,
     pub expiry: Option<String>,
     pub full_name: String,
-    pub group: String,
+    pub group: Option<String>,
     pub has_options: bool,
     pub increment_rules: Vec<IncrementRule>,
     pub is_event_contract: bool,
@@ -30,11 +30,11 @@ pub struct Contract {
     pub is_us: Option<bool>,
     pub last_trading_day: Option<String>,
     pub listing_exchange: String,
-    pub multiplier: f64,
+    pub multiplier: Decimal,
     pub name: Option<String>,
     pub page_size: Option<i64>,
     pub put_or_call: Option<OptionRight>,
-    pub sector: String,
+    pub sector: Option<String>,
     pub sector_group: Option<String>,
     pub strike: String,
     pub ticker: String,
@@ -65,13 +65,16 @@ pub struct DisplayRule {
 #[serde(rename_all = "camelCase")]
 pub struct DisplayRuleStep {
     pub decimal_digits: i64,
-    pub lower_edge: f64,
+    #[serde(with = "rust_decimal::serde::float")]
+    pub lower_edge: Decimal,
     pub whole_digits: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IncrementRule {
-    pub increment: f64,
-    pub lower_edge: f64,
+    #[serde(with = "rust_decimal::serde::float")]
+    pub increment: Decimal,
+    #[serde(with = "rust_decimal::serde::float")]
+    pub lower_edge: Decimal,
 }

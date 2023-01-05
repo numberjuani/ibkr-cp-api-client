@@ -1,4 +1,4 @@
-use crate::client::IBClientPortal;
+use crate::{client::IBClientPortal, models::definitions::AssetClass};
 
 
 
@@ -24,13 +24,13 @@ async fn test_positions() {
 #[ignore]
 async fn test_sec_def_by_con_id() {
     let ib_cp_api_client = IBClientPortal::new(3000, false, "");
-    let contracts = ib_cp_api_client.get_security_definition_by_contract_id(vec![265598,416904,603761154]).await;
+    let contracts = ib_cp_api_client.get_security_definition_by_contract_id(vec![265598,416904,603761154,495512572]).await;
     println!("{:#?}",contracts);
     assert!(contracts.is_ok());
 }
 
 #[tokio::test]
-#[ignore]
+//#[ignore]
 async fn test_futures_by_symbol() {
     let ib_cp_api_client = IBClientPortal::new(3000, false, "");
     let contracts = ib_cp_api_client.get_futures_by_symbol(vec!["ES","NQ"]).await;
@@ -45,4 +45,12 @@ async fn test_stocks_by_symbol() {
     let contracts = ib_cp_api_client.get_stocks_by_symbol(vec!["AAPL","GOOG","QQQ"]).await;
     println!("{:#?}",contracts);
     assert!(contracts.is_ok());
+}
+
+#[tokio::test]
+#[ignore]
+async fn test_search_for_security() {
+    let ib_cp_api_client = IBClientPortal::new(3000, false, "");
+    let apple = ib_cp_api_client.search_for_security("AAPL", false, AssetClass::Option).await.unwrap();
+    println!("{}",serde_json::to_string_pretty(&apple).unwrap());
 }
