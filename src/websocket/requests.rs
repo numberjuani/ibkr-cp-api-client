@@ -19,7 +19,7 @@ pub struct Subscription {
 }
 impl Subscription {
     pub fn new_smart_quote_data(contract:Contract) -> Self {
-        let tick_types = vec![TickType::BidPrice, TickType::AskPrice,TickType::AskSize,TickType::BidSize,TickType::LastPrice,TickType::MarketDataAvailability];
+        let tick_types = vec![TickType::BidPrice, TickType::AskPrice,TickType::AskSize,TickType::BidSize,TickType::LastPrice];
         Self { sub_type: SubscriptionType::QuoteData((tick_types, contract)), exchange: None }
     }
     pub fn build(&self) -> String {
