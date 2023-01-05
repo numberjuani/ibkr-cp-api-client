@@ -23,6 +23,7 @@ pub enum AssetClass {
     MutualFund,
     #[serde(rename = "CMDTY")]
     Commodity,
+    #[serde(rename = "unknown")]
     #[default] Unknown
 }
 impl Display for AssetClass {

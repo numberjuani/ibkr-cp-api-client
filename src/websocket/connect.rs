@@ -24,6 +24,17 @@ pub async fn listen(reader: &mut ReadWs, on_message: fn(String) -> ()) -> Result
     Ok(())
 }
 
+/// Send the required message every 58 seconds to keep the connection alive
+/// https://interactivebrokers.github.io/cpwebapi/websockets#echo
+pub async fn keep_alive(mut writer:WriteWs) -> Result<(), Error> {
+    let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(58));
+    loop {
+        interval.tick().await;
+        writer.send(Text("ech+hb".to_owned())).await?;
+    }
+}
+
+
 impl IBClientPortal {
     fn get_ws_url(&self) -> String {
         let base = if self.listen_ssl { "wss" } else { "ws" };
@@ -37,13 +48,12 @@ impl IBClientPortal {
         let url = self.get_ws_url();
         let (ws_stream, _) = tokio_tungstenite::connect_async(url).await?;
         let (mut ws_out, mut ws_in) = ws_stream.split();
-        let auth = self.ws_auth_msg();
-        ws_out.send(Text(auth.to_owned())).await?;
-        tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+        ws_out.send(Text(self.ws_auth_msg().to_owned())).await?;
+        tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
         for sub in subscriptions {
             ws_out.send(Text(sub.build())).await?;
         }
-        tokio::try_join!(listen(&mut ws_in, on_message),)?;
+        tokio::try_join!(listen(&mut ws_in, on_message),keep_alive(ws_out))?;
         Ok(())
     }
 }

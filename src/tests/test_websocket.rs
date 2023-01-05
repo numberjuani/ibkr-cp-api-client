@@ -1,4 +1,4 @@
-use crate::{client::IBClientPortal, websocket::requests::{Subscription, SubscriptionType, TickType}, models::contract::Contract};
+use crate::{client::IBClientPortal, websocket::requests::{Subscription, SubscriptionType}, models::{contract::Contract, tick_types::TickType}};
 
 fn print_message(msg: String) {
     println!("msg: {}", msg);
@@ -7,7 +7,7 @@ fn print_message(msg: String) {
 #[tokio::test]
 #[ignore]
 async fn test_websocket() {
-    let mut client = IBClientPortal::new(3000, false, "");
+    let mut client = IBClientPortal::from_env();
     client = client.get_session_id().await.unwrap();
     let subs = vec![Subscription::new_smart_quote_data(Contract::from_con_id(265598))];
     client.connect_to_websocket(subs,print_message).await.unwrap();

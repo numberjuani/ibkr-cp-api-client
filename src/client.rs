@@ -1,3 +1,5 @@
+use std::env;
+
 
 
 /// This is the base class of the library. It is used to communicate with the IB CP Gateway.
@@ -36,6 +38,17 @@ impl IBClientPortal {
             account: account.to_string(),
             session_id: None,
         }
+    }
+    ///Builds the client from env vars. Needs
+    /// `IB_PORT`
+    /// `IB_SSL`
+    /// `IB_ACCOUNT`
+    pub fn from_env() -> Self {
+        dotenv::dotenv().ok();
+        let port = env::var("IB_PORT").expect("IB_PORT must be set").parse().unwrap();
+        let listen_ssl = env::var("IB_SSL").expect("IB_SSL must be set") == "true";
+        let account = env::var("IB_ACCOUNT").expect("IB_ACCOUNT must be set");
+        IBClientPortal::new(port, listen_ssl, &account)
     }
 }
 

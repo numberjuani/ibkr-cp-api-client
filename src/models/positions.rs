@@ -1,23 +1,27 @@
+use rust_decimal::Decimal;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Value;
+use super::contract::unpack_exchanges;
 use super::definitions::AssetClass;
 use super::definitions::OptionRight;
+use super::exchanges::Exchange;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Position {
     pub acct_id: String,
-    pub all_exchanges: String,
+    #[serde(with = "unpack_exchanges")]
+    pub all_exchanges: Vec<Exchange>,
     pub asset_class: AssetClass,
-    pub avg_cost: f64,
-    pub avg_price: f64,
-    pub base_avg_cost: f64,
-    pub base_avg_price: f64,
-    pub base_mkt_price: f64,
-    pub base_mkt_value: f64,
-    pub base_realized_pnl: f64,
-    pub base_unrealized_pnl: f64,
+    pub avg_cost: Decimal,
+    pub avg_price: Decimal,
+    pub base_avg_cost: Decimal,
+    pub base_avg_price: Decimal,
+    pub base_mkt_price: Decimal,
+    pub base_mkt_value: Decimal,
+    pub base_realized_pnl: Decimal,
+    pub base_unrealized_pnl: Decimal,
     #[serde(skip)]
     pub chinese_name: String,
     pub con_exch_map: Vec<Value>,
@@ -41,18 +45,19 @@ pub struct Position {
     pub is_us: bool,
     pub last_trading_day: Option<String>,
     pub listing_exchange: String,
-    pub mkt_price: f64,
-    pub mkt_value: f64,
+    pub mkt_price: Decimal,
+    pub mkt_value: Decimal,
     pub model: String,
-    pub multiplier: f64,
+    pub multiplier: Decimal,
     pub name: Option<String>,
     pub page_size: i64,
-    pub position: f64,
+    pub position: Decimal,
     pub put_or_call: Option<OptionRight>,
-    pub realized_pnl: f64,
+    pub realized_pnl: Decimal,
     pub sector: String,
     pub sector_group: Option<String>,
-    pub strike: String,
+    #[serde(with = "rust_decimal::serde::str_option")]
+    pub strike: Option<Decimal>,
     pub ticker: String,
     pub time: i64,
     #[serde(rename = "type")]
@@ -60,7 +65,7 @@ pub struct Position {
     pub und_comp: Option<Value>,
     pub und_conid: i64,
     pub und_sym: Option<String>,
-    pub unrealized_pnl: f64,
+    pub unrealized_pnl: Decimal,
 }
 //"20230103"
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -74,15 +79,15 @@ pub struct DisplayRule {
 #[serde(rename_all = "camelCase")]
 pub struct DisplayRuleStep {
     pub decimal_digits: i64,
-    pub lower_edge: f64,
+    pub lower_edge: Decimal,
     pub whole_digits: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IncrementRule {
-    pub increment: f64,
-    pub lower_edge: f64,
+    pub increment: Decimal,
+    pub lower_edge: Decimal,
 }
 
 

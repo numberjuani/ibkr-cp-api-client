@@ -8,6 +8,7 @@ use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
 use crate::models::positions::Position;
 use crate::models::stock_contracts::{StockContracts};
+use crate::models::tickle::Tickle;
 //https://www.interactivebrokers.com/api/doc.html
 
 
@@ -30,7 +31,7 @@ impl IBClientPortal {
     }
     ///If the gateway has not received any requests for several minutes an open session will automatically timeout. 
     /// The tickle endpoint pings the server to prevent the session from ending.
-    pub async fn tickle(&self) -> Result<Value, reqwest::Error> {
+    pub async fn tickle(&self) -> Result<Tickle, reqwest::Error> {
         let response = self.client.post(self.get_url("/tickle")).header(reqwest::header::CONTENT_LENGTH, reqwest::header::HeaderValue::from_static("0")).body("").send().await?;
         Ok(response.json().await?)
     }
@@ -46,8 +47,7 @@ impl IBClientPortal {
     ///Convenience method to call tickle and get the session id. It is necessary to auth the websocket connection.
     pub async fn get_session_id(mut self) -> Result<Self, reqwest::Error> {
         let response = self.tickle().await?;
-        let as_obj = response.as_object().unwrap();
-        self.session_id = Some(as_obj["session"].as_str().unwrap().to_string());
+        self.session_id = Some(response.session);
         Ok(self)
     }
     ///Returns a list of security definitions for the given conids
@@ -104,6 +104,11 @@ impl IBClientPortal {
             query.push(("strike",strike.to_string()));
         }
         let response = self.client.get(self.get_url(&path)).query(&query).send().await?;
+        Ok(response.json().await?)
+    }
+    ///Logs the user out of the gateway session. Any further activity requires re-authentication.
+    pub async fn logout(&self) -> Result<Value, reqwest::Error> {
+        let response = self.client.post(self.get_url("/logout")).body("").send().await?;
         Ok(response.json().await?)
     }
 }
