@@ -5,7 +5,7 @@ use chrono::{DateTime, Utc, serde::ts_milliseconds};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Root {
+pub struct Execution {
     #[serde(rename = "execution_id")]
     pub execution_id: String,
     pub symbol: String,
