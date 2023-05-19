@@ -37,7 +37,9 @@ impl Subscription {
             SubscriptionType::MarketDepth => unimplemented!(),
             SubscriptionType::Orders => unimplemented!(),
             SubscriptionType::Positions => unimplemented!(),
-            SubscriptionType::Trades => unimplemented!(),
+            SubscriptionType::Trades => {
+                String::from("str+{}")
+            },
             SubscriptionType::ProfitLoss => unimplemented!(),
         }
     }
