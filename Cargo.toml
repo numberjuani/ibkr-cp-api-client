@@ -8,13 +8,14 @@ email = "juanim@pm.me"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.23.1", features = ["macros","rt-multi-thread","signal"] }
-reqwest = { version = "0.11.13", features = ["json"] }
-serde_json = "1.0.91"
-serde = { version = "1.0.152", features = ["derive"] }
-tokio-tungstenite = "0.18.0"
-futures-util = "0.3.25"
-chrono = { version = "0.4.23", features = ["serde"] }
-serde_repr = "0.1.10"
-rust_decimal = { version = "1.27.0", features = ["serde-float","serde-str"] }
+tokio = { version = "1.28.1", features = ["macros","rt-multi-thread","signal","process"] }
+reqwest = { version = "0.11.18", features = ["json"] }
+serde_json = "1.0.96"
+serde = { version = "1.0.163", features = ["derive"] }
+tokio-tungstenite = "0.19.0"
+futures-util = "0.3.28"
+chrono = { version = "0.4.24", features = ["serde"] }
+serde_repr = "0.1.12"
+rust_decimal = { version = "1.29.1", features = ["serde-float","serde-str"] }
 dotenv = "0.15.0"
+thirtyfour = "0.31.0"

@@ -16,7 +16,7 @@ async fn test_tickle() {
 async fn test_positions() {
     let ib_cp_api_client = IBClientPortal::from_env();
     let positions = ib_cp_api_client.get_positions(0).await;
-    println!("{:#?}", positions);
+    println!("{:#?}",positions);
     assert!(positions.is_ok());
 }
 

@@ -98,7 +98,10 @@ pub enum Exchange {
     GSLP,
     CME,
     QBALGO,
-    IBUSOPT
+    IBUSOPT,
+    NYSEDARK,
+    IBEOS,
+    BLUEOCEAN,
 }
 impl Exchange {
     pub fn from_str(string:&str) -> Self {

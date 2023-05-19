@@ -7,8 +7,9 @@ use super::definitions::AssetClass;
 use super::definitions::OptionRight;
 use super::exchanges::Exchange;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct Position {
     pub acct_id: String,
     #[serde(with = "unpack_exchanges")]
@@ -16,12 +17,12 @@ pub struct Position {
     pub asset_class: AssetClass,
     pub avg_cost: Decimal,
     pub avg_price: Decimal,
-    pub base_avg_cost: Decimal,
-    pub base_avg_price: Decimal,
-    pub base_mkt_price: Decimal,
-    pub base_mkt_value: Decimal,
-    pub base_realized_pnl: Decimal,
-    pub base_unrealized_pnl: Decimal,
+    pub base_avg_cost: Option<Decimal>,
+    pub base_avg_price: Option<Decimal>,
+    pub base_mkt_price: Option<Decimal>,
+    pub base_mkt_value: Option<Decimal>,
+    pub base_realized_pnl: Option<Decimal>,
+    pub base_unrealized_pnl: Option<Decimal>,
     #[serde(skip)]
     pub chinese_name: String,
     pub con_exch_map: Vec<Value>,
@@ -44,11 +45,11 @@ pub struct Position {
     #[serde(rename = "isUS")]
     pub is_us: bool,
     pub last_trading_day: Option<String>,
-    pub listing_exchange: String,
+    pub listing_exchange: Option<String>,
     pub mkt_price: Decimal,
     pub mkt_value: Decimal,
     pub model: String,
-    pub multiplier: Decimal,
+    pub multiplier: Option<Decimal>,
     pub name: Option<String>,
     pub page_size: i64,
     pub position: Decimal,
@@ -56,8 +57,7 @@ pub struct Position {
     pub realized_pnl: Decimal,
     pub sector: String,
     pub sector_group: Option<String>,
-    #[serde(with = "rust_decimal::serde::str_option")]
-    pub strike: Option<Decimal>,
+    pub strike: Value,
     pub ticker: String,
     pub time: i64,
     #[serde(rename = "type")]
