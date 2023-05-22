@@ -8,7 +8,7 @@ fn print_message(msg: String) {
 #[ignore]
 async fn test_websocket() {
     let mut client = IBClientPortal::from_env();
-    client = client.get_session_id().await.unwrap();
+    client.get_session_id().await.unwrap();
     let subs = vec![Subscription::new_smart_quote_data(Contract::from_con_id(265598))];
     client.connect_to_websocket(subs,print_message).await.unwrap();
 }

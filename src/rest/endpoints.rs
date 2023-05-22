@@ -45,10 +45,10 @@ impl IBClientPortal {
         Ok(process_response(response).await?)
     }
     ///Convenience method to call tickle and get the session id. It is necessary to auth the websocket connection.
-    pub async fn get_session_id(mut self) -> Result<Self, reqwest::Error> {
+    pub async fn get_session_id(&mut self) -> Result<(), reqwest::Error> {
         let response = self.tickle().await?;
         self.session_id = Some(response.session);
-        Ok(self)
+        Ok(())
     }
     ///Returns a list of security definitions for the given conids
     pub async fn get_security_definition_by_contract_id(&self, contract_ids: Vec<i32>) -> Result<SecurityDefinitions, reqwest::Error> {
@@ -108,7 +108,7 @@ impl IBClientPortal {
     }
     ///Logs the user out of the gateway session. Any further activity requires re-authentication.
     pub async fn logout(&self) -> Result<Value, reqwest::Error> {
-        let response = self.client.post(self.get_url("/logout")).body("").send().await?;
+        let response = self.client.post(self.get_url("/logout")).header(reqwest::header::CONTENT_LENGTH, reqwest::header::HeaderValue::from_static("0")).body("").send().await?;
         Ok(response.json().await?)
     }
 }

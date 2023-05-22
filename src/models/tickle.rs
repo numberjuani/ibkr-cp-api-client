@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct Tickle {
     pub collission: bool,
     pub iserver: Iserver,
@@ -18,6 +19,7 @@ pub struct Iserver {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct AuthStatus {
     #[serde(rename = "MAC")]
     pub mac: String,
@@ -30,6 +32,7 @@ pub struct AuthStatus {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct ServerInfo {
     pub server_name: String,
     pub server_version: String,

@@ -61,3 +61,12 @@ async fn test_exchange() {
     let exch = Exchange::from_str(exch_str);
     assert_eq!(exch, Exchange::NYSE);
 }
+
+#[tokio::test]
+#[ignore]
+async fn test_logout() {
+    let ib_cp_api_client = IBClientPortal::from_env();
+    let logout = ib_cp_api_client.logout().await;
+    println!("{:#?}",logout);
+    assert!(logout.is_ok());
+}

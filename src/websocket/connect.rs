@@ -30,7 +30,7 @@ pub async fn keep_alive(mut writer:WriteWs) -> Result<(), Error> {
     let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(58));
     loop {
         interval.tick().await;
-        writer.send(Text("ech+hb".to_owned())).await?;
+        writer.send(Text("tic".to_owned())).await?;
     }
 }
 
@@ -49,7 +49,7 @@ impl IBClientPortal {
         let (ws_stream, _) = tokio_tungstenite::connect_async(url).await?;
         let (mut ws_out, mut ws_in) = ws_stream.split();
         ws_out.send(Text(self.ws_auth_msg().to_owned())).await?;
-        tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
+        //tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
         for sub in subscriptions {
             ws_out.send(Text(sub.build())).await?;
         }
