@@ -39,6 +39,7 @@ pub async fn authenticate_portal() -> Result<bool, Box<dyn Error>> {
     caps.add_chrome_arg("--window-size=1920,1080")?;
     caps.add_chrome_arg("--disable-gpu")?;
     caps.add_chrome_arg("--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'")?;
+    caps.add_chrome_arg("--no-sandbox")?;
     let driver = WebDriver::new("http://localhost:9515", caps).await?;
     driver.goto(format!("http://localhost:{port}")).await?;
     let login_element = driver.find(By::Id("user_name")).await?;
