@@ -1,7 +1,6 @@
-
+use chrono::{serde::ts_milliseconds, DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use chrono::{DateTime, Utc, serde::ts_milliseconds};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

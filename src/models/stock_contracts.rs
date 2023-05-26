@@ -1,10 +1,10 @@
-use std::collections::HashMap;
-use serde::{Deserialize, Serialize};
 use crate::models::contract::Contract;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 use super::definitions::AssetClass;
 
-pub type StockContracts = HashMap<String,Vec<StockContractInfo>>;
+pub type StockContracts = HashMap<String, Vec<StockContractInfo>>;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -15,4 +15,3 @@ pub struct StockContractInfo {
     pub contracts: Vec<Contract>,
     pub name: String,
 }
-

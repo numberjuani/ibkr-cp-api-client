@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
 use chrono::NaiveDate;
+use serde::{Deserialize, Serialize};
 
-
-pub type FuturesContracts = HashMap<String,Vec<FuturesContract>>;
-
+pub type FuturesContracts = HashMap<String, Vec<FuturesContract>>;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -22,7 +20,6 @@ pub struct FuturesContract {
     pub symbol: String,
     pub underlying_conid: i64,
 }
-
 
 mod parse_date {
     use chrono::NaiveDate;

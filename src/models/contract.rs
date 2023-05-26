@@ -1,15 +1,15 @@
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use rust_decimal::Decimal;
 use super::definitions::{AssetClass, OptionRight};
 use crate::models::exchanges::Exchange;
+use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SecurityDefinitions {
     pub secdef: Vec<Contract>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize,Default)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct Contract {
@@ -80,16 +80,21 @@ pub struct IncrementRule {
     pub lower_edge: Decimal,
 }
 
-
 pub mod unpack_exchanges {
-    use serde::{self, Deserialize, Deserializer, Serializer};
-    use crate::models::exchanges::Exchange;
+    use std::str::FromStr;
 
-    pub fn serialize<S>(exchanges: &Vec<Exchange>, serializer: S) -> Result<S::Ok, S::Error>
+    use crate::models::exchanges::Exchange;
+    use serde::{self, Deserialize, Deserializer, Serializer};
+
+    pub fn serialize<S>(exchanges: &[Exchange], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        let s = exchanges.iter().map(|e| e.to_string()).collect::<Vec<String>>().join(",");
+        let s = exchanges
+            .iter()
+            .map(|e| e.to_string())
+            .collect::<Vec<String>>()
+            .join(",");
         serializer.serialize_str(&s)
     }
 
@@ -98,8 +103,11 @@ pub mod unpack_exchanges {
         D: Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
-        let exchanges = s.split(",").collect::<Vec<&str>>();
-        let exchanges = exchanges.into_iter().map(|e| Exchange::from_str(e)).collect::<Vec<Exchange>>();
+        let exchanges = s
+            .split(',')
+            .map(Exchange::from_str)
+            .collect::<Vec<Result<Exchange, ()>>>();
+        let exchanges = exchanges.into_iter().flatten().collect::<Vec<Exchange>>();
         Ok(exchanges)
     }
 }

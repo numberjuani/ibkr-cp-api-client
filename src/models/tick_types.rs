@@ -1,4 +1,3 @@
-
 use serde_repr::{Deserialize_repr, Serialize_repr};
 #[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug, Clone, Copy)]
 #[repr(u32)]
@@ -65,7 +64,7 @@ pub enum TickType {
     ///Z = Frozen, Y = Frozen Delayed, N = Not Subscribed. Second char defines: P = Snapshot, p = Consolidated.
     ///hird char defines: B = Book
     ///  * RealTime - Data is relayed back in real time without delay, market data subscription(s) are required.
-    ///  * Delayed - Data is relayed back 15-20 min delayed. 
+    ///  * Delayed - Data is relayed back 15-20 min delayed.
     ///  * Frozen - Last recorded data at market close, relayed back in real time.
     ///  * Frozen Delayed - Last recorded data at market close, relayed back delayed.
     ///  * Not Subscribed - User does not have the required market data subscription(s) to relay back either real time or delayed data.
@@ -152,7 +151,7 @@ pub enum TickType {
     Vega = 7311,
     ///Opt. Volume Change % - Today's option volume as a percentage of the average option volume.
     OptVolumeChange = 7607,
-    ///Implied Vol. % - The implied volatility for the specific strike of the option in percentage. To query the Option Implied Vol. % from the underlying refer to field 7283. 
+    ///Implied Vol. % - The implied volatility for the specific strike of the option in percentage. To query the Option Implied Vol. % from the underlying refer to field 7283.
     ImpliedVol = 7633,
     ///Mark - The mark price is, the ask price if ask is less than last price, the bid price if bid is more than the last price, otherwise it's equal to last price.
     Mark = 7635,

@@ -1,11 +1,11 @@
-use rust_decimal::Decimal;
-use serde::Deserialize;
-use serde::Serialize;
-use serde_json::Value;
 use super::contract::unpack_exchanges;
 use super::definitions::AssetClass;
 use super::definitions::OptionRight;
 use super::exchanges::Exchange;
+use rust_decimal::Decimal;
+use serde::Deserialize;
+use serde::Serialize;
+use serde_json::Value;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -89,5 +89,3 @@ pub struct IncrementRule {
     pub increment: Decimal,
     pub lower_edge: Decimal,
 }
-
-

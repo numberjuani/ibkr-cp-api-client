@@ -2,8 +2,7 @@ use std::fmt::{Display, Formatter};
 
 use serde::{Deserialize, Serialize};
 
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize,Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum AssetClass {
     #[serde(rename = "BOND")]
     Bond,
@@ -24,7 +23,8 @@ pub enum AssetClass {
     #[serde(rename = "CMDTY")]
     Commodity,
     #[serde(rename = "unknown")]
-    #[default] Unknown
+    #[default]
+    Unknown,
 }
 impl Display for AssetClass {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -38,16 +38,15 @@ impl Display for AssetClass {
             AssetClass::FuturesOptions => write!(f, "FOP"),
             AssetClass::MutualFund => write!(f, "FUND"),
             AssetClass::Commodity => write!(f, "CMDTY"),
-            AssetClass::Unknown => write!(f, "Unknown")
+            AssetClass::Unknown => write!(f, "Unknown"),
         }
     }
 }
-
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum OptionRight {
     #[serde(rename = "C")]
     Call,
     #[serde(rename = "P")]
-    Put
+    Put,
 }

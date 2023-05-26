@@ -1,7 +1,7 @@
 use crate::client::IBClientPortal;
 use futures_util::{
     stream::{SplitSink, SplitStream},
-    StreamExt, SinkExt,
+    SinkExt, StreamExt,
 };
 
 use serde_json::json;
@@ -26,14 +26,13 @@ pub async fn listen(reader: &mut ReadWs, on_message: fn(String) -> ()) -> Result
 
 /// Send the required message every 58 seconds to keep the connection alive
 /// https://interactivebrokers.github.io/cpwebapi/websockets#echo
-pub async fn keep_alive(mut writer:WriteWs) -> Result<(), Error> {
+pub async fn keep_alive(mut writer: WriteWs) -> Result<(), Error> {
     let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(58));
     loop {
         interval.tick().await;
         writer.send(Text("tic".to_owned())).await?;
     }
 }
-
 
 impl IBClientPortal {
     fn get_ws_url(&self) -> String {
@@ -42,9 +41,13 @@ impl IBClientPortal {
     }
     fn ws_auth_msg(&self) -> String {
         let session = self.session_id.clone().unwrap();
-        json!({"session":session}).to_string()
+        json!({ "session": session }).to_string()
     }
-    pub async fn connect_to_websocket(&self, subscriptions:Vec<Subscription>,on_message: fn(String) -> ()) -> Result<(), Error> {
+    pub async fn connect_to_websocket(
+        &self,
+        subscriptions: Vec<Subscription>,
+        on_message: fn(String) -> (),
+    ) -> Result<(), Error> {
         let url = self.get_ws_url();
         let (ws_stream, _) = tokio_tungstenite::connect_async(url).await?;
         let (mut ws_out, mut ws_in) = ws_stream.split();
@@ -53,7 +56,7 @@ impl IBClientPortal {
         for sub in subscriptions {
             ws_out.send(Text(sub.build())).await?;
         }
-        tokio::try_join!(listen(&mut ws_in, on_message),keep_alive(ws_out))?;
+        tokio::try_join!(listen(&mut ws_in, on_message), keep_alive(ws_out))?;
         Ok(())
     }
 }

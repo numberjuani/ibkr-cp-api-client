@@ -1,13 +1,11 @@
 use std::env;
 
-
-
 /// This is the base class of the library. It is used to communicate with the IB CP Gateway.
 ///
 /// https://interactivebrokers.github.io/cpwebapi/endpoints
-/// 
+///
 /// bin/run.sh root/conf.yaml
-#[derive(Debug,Default)]
+#[derive(Debug, Default)]
 pub struct IBClientPortal {
     pub port: i32,
     pub listen_ssl: bool,
@@ -45,11 +43,12 @@ impl IBClientPortal {
     /// `IB_ACCOUNT`
     pub fn from_env() -> Self {
         dotenv::dotenv().ok();
-        let port = env::var("IB_PORT").expect("IB_PORT must be set").parse().unwrap();
+        let port = env::var("IB_PORT")
+            .expect("IB_PORT must be set")
+            .parse()
+            .unwrap();
         let listen_ssl = env::var("IB_SSL").unwrap_or_default().parse().unwrap();
         let account = env::var("IB_ACCOUNT").expect("IB_ACCOUNT must be set");
         IBClientPortal::new(port, listen_ssl, &account)
     }
 }
-
-
