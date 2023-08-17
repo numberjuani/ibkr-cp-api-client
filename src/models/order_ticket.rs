@@ -33,5 +33,5 @@ pub struct OrderTicket {
     pub is_ccy_conv: bool,
     pub allocation_method: String,
     pub strategy: String,
-    pub strategy_parameters: HashMap<String,Value>,
+    pub strategy_parameters: HashMap<String, Value>,
 }
