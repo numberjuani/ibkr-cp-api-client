@@ -7,6 +7,11 @@ To use add this to your Cargo.toml: </br>
 ## Note 
 Make sure ```listenSsl:false``` in your root/conf.yaml for CP Gateway.
 Auth will only work in Mac and Linux, if you want to add Windows, open PR. </br>
+## Contributing
+Contributions welcome from anybody.
+1. Branch from main.
+2. Open PR.
+3. Wait for me to approve.
 ### Disclaimer
 I am not affiliated with interactive brokers in any way nor am I making
 any representations about how you should trade or use the code in this repository.
