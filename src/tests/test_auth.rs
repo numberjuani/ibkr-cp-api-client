@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::utils::{authenticate_portal, start_portal};
+use crate::auth::{authenticate_portal, start_portal};
 
 #[tokio::test]
 #[ignore]

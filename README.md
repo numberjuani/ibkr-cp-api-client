@@ -6,7 +6,9 @@ To use add this to your Cargo.toml: </br>
 [Docs](https://interactivebrokers.github.io/cpwebapi/) </br>
 ## Note 
 Make sure ```listenSsl:false``` in your root/conf.yaml for CP Gateway.
-Auth will only work in Mac and Linux, if you want to add Windows, open PR. </br>
+
+## Features
+- `auth` - Authentication, brings in functions that can open and authenticate the portal. Windows not supported, if you want it open a PR.
 ## Contributing
 Contributions welcome from anybody.
 1. Branch from main.
