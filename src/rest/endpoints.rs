@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+
 use rust_decimal::Decimal;
 use serde_json::{json, Value};
 
@@ -8,6 +9,7 @@ use crate::models::account_ledger::AccountLedger;
 use crate::models::contract::SecurityDefinitions;
 use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
+use crate::models::order_ticket::OrderTicket;
 use crate::models::positions::Position;
 use crate::models::stock_contracts::StockContracts;
 use crate::models::tickle::Tickle;
@@ -69,7 +71,7 @@ impl IBClientPortal {
     ///Returns a list of security definitions for the given conids
     pub async fn get_security_definition_by_contract_id(
         &self,
-        contract_ids: Vec<i32>,
+        contract_ids: Vec<i64>,
     ) -> Result<SecurityDefinitions, reqwest::Error> {
         let path = "/trsrv/secdef";
         let payload = json!({
@@ -171,9 +173,16 @@ impl IBClientPortal {
     }
     pub async fn get_account_ledger(
         &self,
-    ) -> Result<HashMap<String,AccountLedger>, reqwest::Error> {
+    ) -> Result<HashMap<String, AccountLedger>, reqwest::Error> {
         let path = format!("/portfolio/{}/ledger", self.account);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
+        process_response(response).await
+    }
+    pub async fn place_order(&self, orders: Vec<OrderTicket>) -> Result<Value, reqwest::Error> {
+        let path = format!("/iserver/account/{}/order", self.account);
+        let payload = json!({"orders":orders});
+        let request = self.client.post(self.get_url(&path));
+        let response = request.body(payload.to_string()).send().await?;
         process_response(response).await
     }
 }

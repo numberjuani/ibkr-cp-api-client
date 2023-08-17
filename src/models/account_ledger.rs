@@ -2,7 +2,7 @@ use chrono::serde::ts_seconds;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize,Default)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(default)]
 pub struct AccountLedger {
     pub commoditymarketvalue: Decimal,
