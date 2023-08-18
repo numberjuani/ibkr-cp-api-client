@@ -1,4 +1,5 @@
 #[cfg(test)]
+#[cfg(feature = "auth")]
 pub mod test_auth;
 #[cfg(test)]
 pub mod test_rest;
