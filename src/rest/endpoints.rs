@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use chrono::NaiveDateTime;
 use rust_decimal::Decimal;
 use serde_json::{json, Value};
 
@@ -9,6 +10,7 @@ use crate::models::contract::SecurityDefinitions;
 use crate::models::contract_detail::ContractDetail;
 use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
+use crate::models::market_data_history::MarketDataHistory;
 use crate::models::order_ticket::OrderTicket;
 use crate::models::positions::Position;
 use crate::models::stock_contracts::StockContracts;
@@ -185,10 +187,41 @@ impl IBClientPortal {
         let response = request.body(payload.to_string()).send().await?;
         process_response(response).await
     }
+
     /// Get contracts details. Many fields are optional and do not match the api documentation.
     pub async fn get_contract_detail(&self, conid: i64) -> Result<ContractDetail, reqwest::Error> {
         let path = format!("/iserver/contract/{}/info", conid);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
+        process_response(response).await
+    }
+
+    /// Get market data history
+    /// tradingDayDuration is not always present if period is less than 1 day
+    /// exchange is optional and will be set to "" if not provided
+    /// startTime is optional and not documented
+    pub async fn get_market_data_history(
+        &self,
+        conid: i64,
+        exchange: Option<&str>,
+        period: &str,
+        bar: &str,
+        start_time: Option<NaiveDateTime>,
+    ) -> Result<MarketDataHistory, reqwest::Error> {
+        let path = "/iserver/marketdata/history";
+        let start_time_str = match start_time {
+            Some(start_time) => start_time.format("%Y%m%d-%H:%M:%S").to_string(),
+            None => "".to_string(),
+        };
+
+        let request = self
+            .client
+            .get(self.get_url(path))
+            .query(&[("conid", conid)])
+            .query(&[("period", period)])
+            .query(&[("bar", bar)])
+            .query(&[("exchange", exchange.unwrap_or(""))])
+            .query(&[("startTime", start_time_str)]);
+        let response = request.send().await?;
         process_response(response).await
     }
 }
