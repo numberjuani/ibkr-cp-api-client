@@ -6,6 +6,7 @@ use serde_json::{json, Value};
 use crate::client::IBClientPortal;
 use crate::models::account_ledger::AccountLedger;
 use crate::models::contract::SecurityDefinitions;
+use crate::models::contract_detail::ContractDetail;
 use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
 use crate::models::order_ticket::OrderTicket;
@@ -182,6 +183,12 @@ impl IBClientPortal {
         let payload = json!({"orders":orders});
         let request = self.client.post(self.get_url(&path));
         let response = request.body(payload.to_string()).send().await?;
+        process_response(response).await
+    }
+    /// Get contracts details. Many fields are optional and do not match the api documentation.
+    pub async fn get_contract_detail(&self, conid: i64) -> Result<ContractDetail, reqwest::Error> {
+        let path = format!("/iserver/contract/{}/info", conid);
+        let response = self.client.get(self.get_url(&path)).body("").send().await?;
         process_response(response).await
     }
 }

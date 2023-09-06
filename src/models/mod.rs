@@ -1,5 +1,6 @@
 pub mod account_ledger;
 pub mod contract;
+pub mod contract_detail;
 pub mod definitions;
 pub mod exchanges;
 pub mod executions;
