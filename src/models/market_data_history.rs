@@ -1,6 +1,6 @@
-use chrono::NaiveDateTime;
 use chrono::naive::serde::ts_milliseconds;
-use serde::{Deserialize, Serialize}; 
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Bar {
@@ -10,7 +10,7 @@ pub struct Bar {
     pub l: f64,
     pub v: i64,
     #[serde(with = "ts_milliseconds")]
-    pub  t: NaiveDateTime,
+    pub t: NaiveDateTime,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -37,11 +37,11 @@ pub struct MarketDataHistory {
     pub message_version: i64,
     pub data: Vec<Bar>,
     pub points: u32,
-    pub travel_time: u32
+    pub travel_time: u32,
 }
 
 mod parse_datetime {
-    use chrono::NaiveDateTime;  
+    use chrono::NaiveDateTime;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
     pub fn serialize<S>(date: &NaiveDateTime, serializer: S) -> Result<S::Ok, S::Error>
