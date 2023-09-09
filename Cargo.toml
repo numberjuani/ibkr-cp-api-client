@@ -3,8 +3,11 @@ name = "ibkr-cp-api-client"
 version = "0.2.0"
 edition = "2021"
 authors = ["Juan I Marquez"]
-
-
+license = "MIT"
+license-file = "LICENSE"
+documentation = ""
+homepage = "https://github.com/numberjuani/ibkr-cp-api-client"
+repository = "https://github.com/numberjuani/ibkr-cp-api-client"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
