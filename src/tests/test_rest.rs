@@ -38,7 +38,7 @@ async fn test_sec_def_by_con_id() {
 #[ignore]
 async fn test_contract_detail() {
     let ib_cp_api_client = IBClientPortal::from_env();
-    for conid in vec![265598, 416904, 495512572] {
+    for conid in [265598, 416904, 495512572] {
         let contract_details = ib_cp_api_client.get_contract_detail(conid).await;
         println!("{:#?}", contract_details);
         assert!(contract_details.is_ok());
