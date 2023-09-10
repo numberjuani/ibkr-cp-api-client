@@ -42,7 +42,7 @@ impl IBClientPortal {
     /// `IB_SSL`
     /// `IB_ACCOUNT`
     pub fn from_env() -> Self {
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
         let port = env::var("IB_PORT")
             .expect("IB_PORT must be set")
             .parse()
