@@ -1,3 +1,5 @@
+use std::default;
+
 use chrono::naive::serde::ts_milliseconds;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
@@ -22,7 +24,9 @@ pub struct MarketDataHistory {
     pub price_factor: i64,
     #[serde(with = "parse_datetime")]
     pub start_time: NaiveDateTime,
+    #[serde(default)]
     pub high: String,
+    #[serde(default)]
     pub low: String,
     pub time_period: String,
     pub bar_length: u32,
@@ -36,6 +40,7 @@ pub struct MarketDataHistory {
     pub negative_capable: bool,
     pub message_version: i64,
     pub data: Vec<Bar>,
+    #[serde(default)]
     pub points: u32,
     pub travel_time: u32,
 }

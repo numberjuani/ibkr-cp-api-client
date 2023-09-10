@@ -86,11 +86,8 @@ async fn test_get_market_data_history() {
     let history = ib_cp_api_client
         .get_market_data_history(416904, None, "1w", "1h", None)
         .await;
-
-    println!("{:#?}", history);
     assert!(history.is_ok());
     let history = history.unwrap();
-    println!("{:#?}", history);
     assert_eq!(history.time_period, "1w");
     assert_eq!(history.bar_length, 3600);
 
@@ -126,7 +123,12 @@ async fn test_get_market_data_history() {
         chrono::naive::NaiveDateTime::parse_from_str("2023-08-31T17:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
             .unwrap()
     );
-    println!("{:#?}", history);
+
+    // nonexistent conid is an error
+    let history = ib_cp_api_client
+        .get_market_data_history(123, Some(""), "12h", "1h", None)
+        .await;
+    assert!(history.is_err());
 }
 
 #[tokio::test]

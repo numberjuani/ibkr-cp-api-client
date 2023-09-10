@@ -173,6 +173,7 @@ impl IBClientPortal {
             .await?;
         response.json().await
     }
+
     pub async fn get_account_ledger(
         &self,
     ) -> Result<HashMap<String, AccountLedger>, reqwest::Error> {
@@ -180,6 +181,7 @@ impl IBClientPortal {
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
         process_response(response).await
     }
+
     pub async fn place_order(&self, orders: Vec<OrderTicket>) -> Result<Value, reqwest::Error> {
         let path = format!("/iserver/account/{}/order", self.account);
         let payload = json!({"orders":orders});
@@ -192,7 +194,7 @@ impl IBClientPortal {
     pub async fn get_contract_detail(&self, conid: i64) -> Result<ContractDetail, reqwest::Error> {
         let path = format!("/iserver/contract/{}/info", conid);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
-        process_response(response).await
+        response.json().await
     }
 
     /// Get market data history
@@ -222,6 +224,6 @@ impl IBClientPortal {
             .query(&[("exchange", exchange.unwrap_or(""))])
             .query(&[("startTime", start_time_str)]);
         let response = request.send().await?;
-        process_response(response).await
+        response.json().await
     }
 }
