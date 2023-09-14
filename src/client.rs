@@ -5,7 +5,7 @@ use std::env;
 /// https://interactivebrokers.github.io/cpwebapi/endpoints
 ///
 /// bin/run.sh root/conf.yaml
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct IBClientPortal {
     pub port: i32,
     pub listen_ssl: bool,

@@ -14,6 +14,7 @@ use crate::models::market_data_history::MarketDataHistory;
 use crate::models::order_ticket::OrderTicket;
 use crate::models::positions::Position;
 use crate::models::stock_contracts::StockContracts;
+use crate::models::tickle::AuthStatus;
 use crate::models::tickle::Tickle;
 //https://www.interactivebrokers.com/api/doc.html
 
@@ -31,16 +32,20 @@ impl IBClientPortal {
     }
     /// Current Authentication status to the Brokerage system.
     /// Market Data and Trading is not possible if not authenticated, e.g. authenticated shows false
-    pub async fn check_auth_status(&self) -> Result<Value, reqwest::Error> {
+    pub async fn check_auth_status(&self) -> Result<AuthStatus, reqwest::Error> {
         let response = self
             .client
             .post(self.get_url("/iserver/auth/status"))
+            .header(
+                reqwest::header::CONTENT_LENGTH,
+                reqwest::header::HeaderValue::from_static("0"),
+            )
             .body("")
             .send()
             .await?;
         response.json().await
     }
-    ///If the gateway has not received any requests for several minutes an open session will automatically timeout.
+    /// If the gateway has not received any requests for several minutes an open session will automatically timeout.
     /// The tickle endpoint pings the server to prevent the session from ending.
     pub async fn tickle(&self) -> Result<Tickle, reqwest::Error> {
         let response = self
@@ -55,9 +60,9 @@ impl IBClientPortal {
             .await?;
         response.json().await
     }
-    ///Returns a list of positions for the given account.
-    ///The endpoint supports paging, page's default size is 30 positions.
-    ///`/portfolio/accounts` or `/portfolio/subaccounts` must be called prior to this endpoint.
+    /// Returns a list of positions for the given account.
+    /// The endpoint supports paging, page's default size is 30 positions.
+    /// `/portfolio/accounts` or `/portfolio/subaccounts` must be called prior to this endpoint.
     pub async fn get_positions(&self, page: i32) -> Result<Vec<Position>, reqwest::Error> {
         let path = format!("/portfolio/{}/positions/{}", self.account, page);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
@@ -201,6 +206,7 @@ impl IBClientPortal {
     /// tradingDayDuration is not always present if period is less than 1 day
     /// exchange is optional and will be set to "" if not provided
     /// startTime is optional and not documented
+    /// to retrieve 1min bars the startTime  should be 2 minutes after the timestamp expected in the last bar of the response
     pub async fn get_market_data_history(
         &self,
         conid: i64,

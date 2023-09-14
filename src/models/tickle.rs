@@ -28,6 +28,7 @@ pub struct AuthStatus {
     pub connected: bool,
     pub message: String,
     pub server_info: ServerInfo,
+    pub fail: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
