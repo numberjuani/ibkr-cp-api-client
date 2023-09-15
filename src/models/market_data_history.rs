@@ -4,13 +4,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Bar {
-    pub o: f64,
-    pub c: f64,
-    pub h: f64,
-    pub l: f64,
-    pub v: i64,
     #[serde(with = "ts_milliseconds")]
-    pub t: NaiveDateTime,
+    #[serde(alias = "t")]
+    pub timestamp: NaiveDateTime,
+    #[serde(alias = "o")]
+    pub open: rust_decimal::Decimal,
+    #[serde(alias = "c")]
+    pub close: rust_decimal::Decimal,
+    #[serde(alias = "h")]
+    pub high: rust_decimal::Decimal,
+    #[serde(alias = "l")]
+    pub low: rust_decimal::Decimal,
+    #[serde(alias = "v")]
+    pub volume: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -22,9 +28,7 @@ pub struct MarketDataHistory {
     pub price_factor: i64,
     #[serde(with = "parse_datetime")]
     pub start_time: NaiveDateTime,
-    #[serde(default)]
     pub high: String,
-    #[serde(default)]
     pub low: String,
     pub time_period: String,
     pub bar_length: u32,
@@ -38,7 +42,6 @@ pub struct MarketDataHistory {
     pub negative_capable: bool,
     pub message_version: i64,
     pub data: Vec<Bar>,
-    #[serde(default)]
     pub points: u32,
     pub travel_time: u32,
 }
