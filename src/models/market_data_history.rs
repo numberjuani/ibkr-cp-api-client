@@ -28,8 +28,8 @@ pub struct MarketDataHistory {
     pub price_factor: i64,
     #[serde(with = "parse_datetime")]
     pub start_time: NaiveDateTime,
-    pub high: String,
-    pub low: String,
+    pub high: Option<String>,
+    pub low: Option<String>,
     pub time_period: String,
     pub bar_length: u32,
     pub md_availability: String,
@@ -42,7 +42,7 @@ pub struct MarketDataHistory {
     pub negative_capable: bool,
     pub message_version: i64,
     pub data: Vec<Bar>,
-    pub points: u32,
+    pub points: Option<u32>,
     pub travel_time: u32,
 }
 

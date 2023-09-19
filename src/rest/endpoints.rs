@@ -213,6 +213,7 @@ impl IBClientPortal {
         exchange: Option<&str>,
         period: &str,
         bar: &str,
+        outside_rth: bool,
         start_time: Option<NaiveDateTime>,
     ) -> Result<MarketDataHistory, reqwest::Error> {
         let path = "/iserver/marketdata/history";
@@ -228,6 +229,7 @@ impl IBClientPortal {
             .query(&[("period", period)])
             .query(&[("bar", bar)])
             .query(&[("exchange", exchange.unwrap_or(""))])
+            .query(&[("outsideRth", outside_rth)])
             .query(&[("startTime", start_time_str)]);
         let response = request.send().await?;
         response.json().await
