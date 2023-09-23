@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use chrono::NaiveDateTime;
 use rust_decimal::Decimal;
 use serde_json::{json, Value};
 
@@ -9,9 +10,11 @@ use crate::models::contract::SecurityDefinitions;
 use crate::models::contract_detail::ContractDetail;
 use crate::models::definitions::AssetClass;
 use crate::models::futures_contract::FuturesContracts;
+use crate::models::market_data_history::MarketDataHistory;
 use crate::models::order_ticket::OrderTicket;
 use crate::models::positions::Position;
 use crate::models::stock_contracts::StockContracts;
+use crate::models::tickle::AuthStatus;
 use crate::models::tickle::Tickle;
 //https://www.interactivebrokers.com/api/doc.html
 
@@ -29,16 +32,20 @@ impl IBClientPortal {
     }
     /// Current Authentication status to the Brokerage system.
     /// Market Data and Trading is not possible if not authenticated, e.g. authenticated shows false
-    pub async fn check_auth_status(&self) -> Result<Value, reqwest::Error> {
+    pub async fn check_auth_status(&self) -> Result<AuthStatus, reqwest::Error> {
         let response = self
             .client
             .post(self.get_url("/iserver/auth/status"))
+            .header(
+                reqwest::header::CONTENT_LENGTH,
+                reqwest::header::HeaderValue::from_static("0"),
+            )
             .body("")
             .send()
             .await?;
         response.json().await
     }
-    ///If the gateway has not received any requests for several minutes an open session will automatically timeout.
+    /// If the gateway has not received any requests for several minutes an open session will automatically timeout.
     /// The tickle endpoint pings the server to prevent the session from ending.
     pub async fn tickle(&self) -> Result<Tickle, reqwest::Error> {
         let response = self
@@ -53,9 +60,9 @@ impl IBClientPortal {
             .await?;
         response.json().await
     }
-    ///Returns a list of positions for the given account.
-    ///The endpoint supports paging, page's default size is 30 positions.
-    ///`/portfolio/accounts` or `/portfolio/subaccounts` must be called prior to this endpoint.
+    /// Returns a list of positions for the given account.
+    /// The endpoint supports paging, page's default size is 30 positions.
+    /// `/portfolio/accounts` or `/portfolio/subaccounts` must be called prior to this endpoint.
     pub async fn get_positions(&self, page: i32) -> Result<Vec<Position>, reqwest::Error> {
         let path = format!("/portfolio/{}/positions/{}", self.account, page);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
@@ -171,6 +178,7 @@ impl IBClientPortal {
             .await?;
         response.json().await
     }
+
     pub async fn get_account_ledger(
         &self,
     ) -> Result<HashMap<String, AccountLedger>, reqwest::Error> {
@@ -178,6 +186,7 @@ impl IBClientPortal {
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
         process_response(response).await
     }
+
     pub async fn place_order(&self, orders: Vec<OrderTicket>) -> Result<Value, reqwest::Error> {
         let path = format!("/iserver/account/{}/order", self.account);
         let payload = json!({"orders":orders});
@@ -185,10 +194,44 @@ impl IBClientPortal {
         let response = request.body(payload.to_string()).send().await?;
         process_response(response).await
     }
+
     /// Get contracts details. Many fields are optional and do not match the api documentation.
     pub async fn get_contract_detail(&self, conid: i64) -> Result<ContractDetail, reqwest::Error> {
         let path = format!("/iserver/contract/{}/info", conid);
         let response = self.client.get(self.get_url(&path)).body("").send().await?;
-        process_response(response).await
+        response.json().await
+    }
+
+    /// Get market data history
+    /// tradingDayDuration is not always present if period is less than 1 day
+    /// exchange is optional and will be set to "" if not provided
+    /// startTime is optional and not documented
+    /// to retrieve 1min bars the startTime  should be 2 minutes after the timestamp expected in the last bar of the response
+    pub async fn get_market_data_history(
+        &self,
+        conid: i64,
+        exchange: Option<&str>,
+        period: &str,
+        bar: &str,
+        outside_rth: bool,
+        start_time: Option<NaiveDateTime>,
+    ) -> Result<MarketDataHistory, reqwest::Error> {
+        let path = "/iserver/marketdata/history";
+        let start_time_str = match start_time {
+            Some(start_time) => start_time.format("%Y%m%d-%H:%M:%S").to_string(),
+            None => "".to_string(),
+        };
+
+        let request = self
+            .client
+            .get(self.get_url(path))
+            .query(&[("conid", conid)])
+            .query(&[("period", period)])
+            .query(&[("bar", bar)])
+            .query(&[("exchange", exchange.unwrap_or(""))])
+            .query(&[("outsideRth", outside_rth)])
+            .query(&[("startTime", start_time_str)]);
+        let response = request.send().await?;
+        response.json().await
     }
 }

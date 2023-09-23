@@ -80,6 +80,59 @@ async fn test_search_for_security() {
 }
 
 #[tokio::test]
+#[ignore]
+async fn test_get_market_data_history() {
+    let ib_cp_api_client = IBClientPortal::from_env();
+    let history = ib_cp_api_client
+        .get_market_data_history(416904, None, "1w", "1h", false, None)
+        .await;
+    assert!(history.is_ok());
+    let history = history.unwrap();
+    assert_eq!(history.time_period, "1w");
+    assert_eq!(history.bar_length, 3600);
+
+    // tradingDayDuration is not always present if period is less than 1 day
+    let history = ib_cp_api_client
+        .get_market_data_history(416904, Some(""), "12h", "1h", false, None)
+        .await;
+    assert!(history.is_ok());
+
+    // use optional startTime parameter which is not documented
+    // data.len() is 13 but points is 12
+    let history = ib_cp_api_client
+        .get_market_data_history(
+            416904,
+            None,
+            "12h",
+            "1h",
+            false,
+            Some(
+                chrono::naive::NaiveDateTime::parse_from_str(
+                    "2023-08-31T19:00:00Z",
+                    "%Y-%m-%dT%H:%M:%SZ",
+                )
+                .unwrap(),
+            ),
+        )
+        .await;
+    assert!(history.is_ok());
+    let history = history.unwrap();
+    assert_eq!(history.data.len(), 13);
+    assert_eq!(history.points, Some(12));
+    assert_eq!(
+        history.data.iter().last().unwrap().timestamp,
+        chrono::naive::NaiveDateTime::parse_from_str("2023-08-31T17:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+            .unwrap()
+    );
+
+    // nonexistent conid is an error
+    let history = ib_cp_api_client
+        .get_market_data_history(123, Some(""), "12h", "1h", false, None)
+        .await;
+    assert!(history.is_err());
+}
+
+#[tokio::test]
 async fn test_exchange() {
     let exch_str = "NYSE";
     let exch = Exchange::from_str(exch_str).unwrap();
