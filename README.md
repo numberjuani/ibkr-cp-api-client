@@ -9,6 +9,7 @@ Make sure ```listenSsl:false``` in your root/conf.yaml for CP Gateway.
 
 ## Features
 - `auth` - Authentication, brings in functions that can open and authenticate the portal. Windows not supported, if you want it open a PR.
+- NOTE: You may need to inspect the page and adjust the element names for auth to work.
 ## Contributing
 Contributions welcome from anybody.
 1. Branch from main.
