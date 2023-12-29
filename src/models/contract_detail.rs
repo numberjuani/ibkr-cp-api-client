@@ -1,8 +1,8 @@
 use crate::models::contract::unpack_exchanges;
-use crate::models::exchanges::Exchange;
 use serde::{Deserialize, Serialize};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
 pub struct ContractDetail {
     pub r_t_h: bool,
     #[serde(rename = r#"con_id"#)]
@@ -23,7 +23,7 @@ pub struct ContractDetail {
     pub underlying_issuer: Option<String>,
     pub trading_class: Option<String>,
     #[serde(with = "unpack_exchanges")]
-    pub valid_exchanges: Vec<Exchange>,
+    pub valid_exchanges: Vec<String>,
     pub allow_sell_long: bool,
     pub is_zero_commission_security: bool,
     pub contract_clarification_type: Option<String>,

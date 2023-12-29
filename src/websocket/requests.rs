@@ -1,6 +1,6 @@
 use serde_json::json;
 
-use crate::models::{contract::Contract, exchanges::Exchange, tick_types::TickType};
+use crate::models::{contract::Contract, tick_types::TickType};
 
 pub enum SubscriptionType {
     QuoteData((Vec<TickType>, Contract)),
@@ -14,7 +14,7 @@ pub enum SubscriptionType {
 
 pub struct Subscription {
     pub sub_type: SubscriptionType,
-    pub exchange: Option<Exchange>,
+    pub exchange: Option<String>,
 }
 impl Subscription {
     pub fn new_smart_quote_data(contract: Contract) -> Self {

@@ -44,9 +44,9 @@ pub async fn authenticate_portal() -> Result<bool, Box<dyn Error>> {
     let driver = WebDriver::new("http://localhost:9515", caps).await?;
     tokio::time::sleep(Duration::from_secs(20)).await;
     driver.goto(format!("http://localhost:{port}")).await?;
-    let login_element = driver.find(By::Id("user_name")).await?;
+    let login_element = driver.find(By::Id("xyz-field-username")).await?;
     login_element.send_keys(username).await?;
-    let password_element = driver.find(By::Id("password")).await?;
+    let password_element = driver.find(By::Id("xyz-field-password")).await?;
     password_element.send_keys(password).await?;
     driver.find(By::Id("submitForm")).await?.click().await?;
     tokio::time::sleep(Duration::from_secs(2)).await;

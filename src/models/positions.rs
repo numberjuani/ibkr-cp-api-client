@@ -1,7 +1,6 @@
 use super::contract::unpack_exchanges;
 use super::definitions::AssetClass;
 use super::definitions::OptionRight;
-use super::exchanges::Exchange;
 use rust_decimal::Decimal;
 use serde::Deserialize;
 use serde::Serialize;
@@ -13,7 +12,7 @@ use serde_json::Value;
 pub struct Position {
     pub acct_id: String,
     #[serde(with = "unpack_exchanges")]
-    pub all_exchanges: Vec<Exchange>,
+    pub all_exchanges: Vec<String>,
     pub asset_class: AssetClass,
     pub avg_cost: Decimal,
     pub avg_price: Decimal,

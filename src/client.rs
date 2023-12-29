@@ -27,6 +27,7 @@ impl IBClientPortal {
         let client = reqwest::Client::builder()
             .danger_accept_invalid_certs(true)
             .default_headers(default_headers)
+            .timeout(std::time::Duration::from_secs(5))
             .build()
             .unwrap();
         IBClientPortal {

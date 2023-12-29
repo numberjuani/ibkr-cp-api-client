@@ -1,9 +1,4 @@
-use std::str::FromStr;
-
-use crate::{
-    client::IBClientPortal,
-    models::{definitions::AssetClass, exchanges::Exchange},
-};
+use crate::{client::IBClientPortal, models::definitions::AssetClass};
 
 #[tokio::test]
 #[ignore]
@@ -130,13 +125,6 @@ async fn test_get_market_data_history() {
         .get_market_data_history(123, Some(""), "12h", "1h", false, None)
         .await;
     assert!(history.is_err());
-}
-
-#[tokio::test]
-async fn test_exchange() {
-    let exch_str = "NYSE";
-    let exch = Exchange::from_str(exch_str).unwrap();
-    assert_eq!(exch, Exchange::NYSE);
 }
 
 #[tokio::test]

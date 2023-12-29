@@ -1,5 +1,4 @@
 use super::definitions::{AssetClass, OptionRight};
-use crate::models::exchanges::Exchange;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -13,8 +12,8 @@ pub struct SecurityDefinitions {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct Contract {
-    #[serde(with = "unpack_exchanges")]
-    pub all_exchanges: Vec<Exchange>,
+    #[serde(with = "unpack_exchanges", alias = "exchange")]
+    pub all_exchanges: Vec<String>,
     pub asset_class: AssetClass,
     pub chinese_name: String,
     pub conid: i64,
@@ -81,12 +80,9 @@ pub struct IncrementRule {
 }
 
 pub mod unpack_exchanges {
-    use std::str::FromStr;
-
-    use crate::models::exchanges::Exchange;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    pub fn serialize<S>(exchanges: &[Exchange], serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(exchanges: &[String], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -98,16 +94,13 @@ pub mod unpack_exchanges {
         serializer.serialize_str(&s)
     }
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<Exchange>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
     where
         D: Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
-        let exchanges = s
-            .split(',')
-            .map(Exchange::from_str)
-            .collect::<Vec<Result<Exchange, ()>>>();
-        let exchanges = exchanges.into_iter().flatten().collect::<Vec<Exchange>>();
+        let exchanges: Vec<String> = s.split(',').map(|e| e.trim().to_string()).collect();
+
         Ok(exchanges)
     }
 }
