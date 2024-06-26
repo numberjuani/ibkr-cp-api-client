@@ -1,5 +1,5 @@
 use std::{error::Error, path::Path, time::Duration};
-use thirtyfour::{By, DesiredCapabilities, WebDriver};
+use thirtyfour::{By, ChromiumLikeCapabilities, DesiredCapabilities, WebDriver};
 use tokio::process::Command;
 
 /// This function starts the IB Client Portal in a subprocess.
@@ -36,10 +36,10 @@ pub async fn authenticate_portal() -> Result<bool, Box<dyn Error>> {
         .expect("failed to start ChromeDriver");
     let mut caps = DesiredCapabilities::chrome();
     caps.set_headless()?;
-    caps.add_chrome_arg("--window-size=1920,1080")?;
-    caps.add_chrome_arg("--disable-gpu")?;
-    caps.add_chrome_arg("--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'")?;
-    caps.add_chrome_arg("--no-sandbox")?;
+    caps.add_arg("--window-size=1920,1080")?;
+    caps.add_arg("--disable-gpu")?;
+    caps.add_arg("--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'")?;
+    caps.add_arg("--no-sandbox")?;
     tokio::time::sleep(Duration::from_secs(20)).await;
     let driver = WebDriver::new("http://localhost:9515", caps).await?;
     tokio::time::sleep(Duration::from_secs(20)).await;
